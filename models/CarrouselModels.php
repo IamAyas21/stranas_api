@@ -1,5 +1,6 @@
 <?php
-require_once('../../config/Connection.php');
+//require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/config/Connection.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/config/Connection.php');
 class Carrousel 
 {
    public function get_carrousel($id)
@@ -80,12 +81,12 @@ class Carrousel
    {
       global $mysqli;
       $arrcheckpost = array('ImageUrl' => '', 'ImageDescription' => '');
-      $hitung = count(array_intersect_key($_POST, $arrcheckpost));
+      $hitung = count(array_intersect_key($_GET, $arrcheckpost));
       if($hitung == count($arrcheckpost)){
        
            $result = mysqli_query($mysqli, "UPDATE carrousel SET
-           ImageUrl = '$_POST[ImageUrl]',
-           ImageDescription = '$_POST[ImageDescription]'
+           ImageUrl = '$_GET[ImageUrl]',
+           ImageDescription = '$_GET[ImageDescription]'
            WHERE id='$id'");
        
          if($result)

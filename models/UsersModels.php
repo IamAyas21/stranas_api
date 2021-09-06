@@ -1,5 +1,6 @@
 <?php
-require_once('../../config/Connection.php');
+//require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/config/Connection.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/config/Connection.php');
 class Users 
 {
  

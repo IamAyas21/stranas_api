@@ -5,37 +5,37 @@ header('Access-Control-Allow-Credentials:true');
 header('Access-Control-Allow-Headers:Content-Type, Authorization');
 header('Content-Type: application/json');
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/models/CarrouselModels.php');
-//require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/models/UsersModels.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/models/MediaModels.php');
+//require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/models/MediaModels.php');
 
-$carrousel = new Carrousel();
+$media = new Media();
 $request_method=$_SERVER["REQUEST_METHOD"];
 switch ($request_method) {
-   case 'GET':
+    case 'GET':
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
          }
          
-         $carrousel->get_carrousel($id);
+         $media->get_media($id);
          break;
-   case 'POST':
-         $carrousel->insert_carrousel();
+    case 'POST':
+         $media->insert_media();
          break;
     case 'PUT':
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
-            $carrousel->update_carrousel($id);
+            $media->update_media($id);
          }   
          break; 
-   case 'DELETE':
+    case 'DELETE':
             $id=intval($_GET["id"]);
-            $carrousel->delete_carrousel($id);
+            $media->delete_media($id);
          break;
-   case 'OPTIONS':
+    case 'OPTIONS':
          break;
-   default:
+    default:
       // Invalid Request Method
          header("HTTP/1.0 405 Method Not Allowed");
          break;
