@@ -53,7 +53,7 @@ class Gallery
         global $mysqli;
         $status = "0";
 
-        $arrcheckpost = array('Category' => '', 'ImageUrl' => '', 'ImageName' => '', 'Descriptions' => '');
+        $arrcheckpost = array('Category' => '', 'ImageName' => '', 'Descriptions' => '');
         $hitung = count(array_intersect_key($_POST, $arrcheckpost));
         
         if($hitung == count($arrcheckpost))
@@ -70,9 +70,8 @@ class Gallery
                 {
                     foreach($_FILES['ImageUpload']['name'] as $id=>$val)
                     {
-                        $random_name = rand(1000,1000000)."-".strtolower($_FILES["ImageUpload"]["name"][$id]);
+                        $random_name = preg_replace('/\s+/', '-',rand(1000,1000000)."-".strtolower($_FILES["ImageUpload"]["name"][$id]));
                         $upload_name = $upload_dir.strtolower($random_name);
-                        $upload_name = preg_replace('/\s+/', '-', $upload_name);
          
                         if(move_uploaded_file($_FILES["ImageUpload"]["tmp_name"][$id] , $upload_name))
                         {
@@ -112,53 +111,44 @@ class Gallery
             {
                $result = mysqli_query($mysqli, "UPDATE gallery SET
                Category = '$_POST[Category]',
-               ImageUrl = '$_POST[ImageUrl]',
                ImageName = '$_POST[ImageName]',
                Descriptions = '$_POST[Descriptions]'
                WHERE id='$id'");
 
                $status = "1";
-
-               if (!empty(array_filter($_FILES['ImageUpload']['name'])))
+			   if($_FILES["ImageUpload"]["name"] != "")
                {
-                foreach($_FILES['ImageUpload']['name'] as $id=>$val)
-                {
-                    if($_FILES["ImageUpload"]["name"][$id] != "")
-                    {
-                        $query = "select gallery.ImageUrl from gallery where id = ".$id." LIMIT 1";
-                        $result = mysqli_query($mysqli,$query);
-                        $row = mysqli_fetch_assoc($result);
-                        $fileName = $row['FileUrl'];
-                        $upload_name = $upload_dir.$fileName;
+				    $query = "select gallery.ImageUrl from gallery where id = ".$id." LIMIT 1";
+					$result = mysqli_query($mysqli,$query);
+					$row = mysqli_fetch_assoc($result);
+					$fileName = $row['ImageUrl'];
+					$upload_name = $upload_dir.$fileName;
 
-                        if (file_exists($upload_name)) 
-                        {
-                            unlink($upload_name);
-                        } 
+					if (file_exists($upload_name)) 
+					{
+						unlink($upload_name);
+					} 
+					$random_name = preg_replace('/\s+/', '-',rand(1000,1000000)."-".strtolower($_FILES["ImageUpload"]["name"][$id] ));
+					$upload_name = $upload_dir.strtolower($random_name);
 
-                        $random_name = preg_replace('/\s+/', '-',rand(1000,1000000)."-".strtolower($_FILES["ImageUpload"]["name"][$id] ));
-                        $upload_name = $upload_dir.strtolower($random_name);
+					if(move_uploaded_file($_FILES["ImageUpload"]["tmp_name"] , $upload_name))
+					{
+						$urlFile = $random_name;
+						$query = "UPDATE gallery SET ImageUrl = '$urlFile' where id = '$id'";
+						$result = mysqli_query($mysqli, $query);
 
-                        if(move_uploaded_file($_FILES["ImageUpload"]["tmp_name"][$id] , $upload_name))
-                        {
-                            $urlFile = $random_name;
-                            $query = "UPDATE gallery SET ImageUrl = '$urlFile' where id = '$id'";
-                            $result = mysqli_query($mysqli, $query);
+						$status = "1";
+					}
+					else
+					{
+						$status = "0";
 
-                            $status = "1";
-                        }
-                        else
-                        {
-                            $status = "0";
-
-                            $response=array(
-                                'status' => 0,
-                                'message' =>'File upload failed.'
-                            );
-                        } 
-                    }
-                }
-               }
+						$response=array(
+							'status' => 0,
+							'message' =>'File upload failed.'
+						);
+					} 
+			   }
 
                if($status == "1")
                {

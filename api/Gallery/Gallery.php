@@ -13,12 +13,18 @@ $request_method=$_SERVER["REQUEST_METHOD"];
 switch ($request_method) {
     case 'GET':
         $id = 0;
+        $page = "";
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
          }
          
-         $gallery->get_gallery($id);
+         if(!empty($_GET["page"]))
+         {
+            $page=$_GET["page"];
+         }
+         
+         $gallery->get_gallery($id, $page);
          break;
     case 'POST':
          $gallery->insert_update_gallery();
