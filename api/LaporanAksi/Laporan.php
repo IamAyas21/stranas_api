@@ -14,9 +14,12 @@ switch ($request_method) {
     case 'GET':
         $id = 0;
         $page = "";
-         if(!empty($_GET["id"]) && !empty($_GET["page"]))
+         if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
+         }
+         if(!empty($_GET["page"]))
+         {
             $page=$_GET["page"];
          }
          
