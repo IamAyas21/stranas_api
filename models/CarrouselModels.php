@@ -50,7 +50,8 @@ class Carrousel
        
             $result = mysqli_query($mysqli, "INSERT INTO carrousel SET
             ImageUrl = '$_POST[ImageUrl]',
-            ImageDescription = '$_POST[ImageDescription]'");
+            ImageDescription = '$_POST[ImageDescription]',
+            CreatedAt = now()");
              
             if($result)
             {
@@ -86,7 +87,8 @@ class Carrousel
        
            $result = mysqli_query($mysqli, "UPDATE carrousel SET
            ImageUrl = '$_GET[ImageUrl]',
-           ImageDescription = '$_GET[ImageDescription]'
+           ImageDescription = '$_GET[ImageDescription]',
+           UpdatedAt = now()
            WHERE id='$id'");
        
          if($result)

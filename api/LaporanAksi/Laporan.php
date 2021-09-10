@@ -28,6 +28,15 @@ switch ($request_method) {
     case 'POST':
          $laporan->insert_update_laporan();
          break;
+    case 'PUT':
+         $id = 0;
+         if(!empty($_GET["id"]))
+         {
+            $id=intval($_GET["id"]);
+         }
+
+         $laporan->download_laporan($id);
+         break;
     case 'DELETE':
             $id=intval($_GET["id"]);
             $laporan->delete_laporan($id);

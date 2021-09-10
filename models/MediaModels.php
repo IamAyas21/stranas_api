@@ -80,7 +80,8 @@ class Media
                    Title = '$_POST[Title]',
                    VideoName = '$_POST[VideoName]',
                    VideoUrl = '$urlFile',
-                   Body = '$_POST[Body]'");
+                   Body = '$_POST[Body]',
+                   CreatedAt = now()");
                     
                    if($result)
                    {
@@ -111,7 +112,8 @@ class Media
                Category = '$_POST[Category]',
                Title = '$_POST[Title]',
                VideoName = '$_POST[VideoName]',
-               Body = '$_POST[Body]'
+               Body = '$_POST[Body]',
+               UpdatedAt = now()
                WHERE id='$id'");
 
                $status = "1";
@@ -191,7 +193,8 @@ class Media
            Body = '$_GET[Body]',
            VideoName = '$_GET[VideoName]',
            VideoUrl = '$_GET[VideoUrl]',
-           Category = '$_GET[Category]'
+           Category = '$_GET[Category]',
+           UpdatedAt = now()
            WHERE id='$id'");
        
          if($result)

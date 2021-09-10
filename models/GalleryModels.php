@@ -80,7 +80,8 @@ class Gallery
                             Category = '$_POST[Category]',
                             ImageName = '$_POST[ImageName]',
                             ImageUrl = '$urlFile',
-                            Descriptions = '$_POST[Descriptions]'");
+                            Descriptions = '$_POST[Descriptions]',
+                            CreatedAt = now()");
                              
                             if($result)
                             {
@@ -134,7 +135,7 @@ class Gallery
 					if(move_uploaded_file($_FILES["ImageUpload"]["tmp_name"] , $upload_name))
 					{
 						$urlFile = $random_name;
-						$query = "UPDATE gallery SET ImageUrl = '$urlFile' where id = '$id'";
+						$query = "UPDATE gallery SET UpdatedAt = now(), ImageUrl = '$urlFile' where id = '$id'";
 						$result = mysqli_query($mysqli, $query);
 
 						$status = "1";

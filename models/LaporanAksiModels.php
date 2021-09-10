@@ -4,7 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/config/Connection.php');
 
 class LaporanAksi 
 {
-   public function get_laporan($id, $page)
+   function get_laporan($id, $page)
    {
       global $mysqli;
       //$host = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://'.$_SERVER['HTTP_HOST'].'/webservice/uploads/laporan-aksi/';
@@ -16,6 +16,7 @@ class LaporanAksi
                     , concat('".$host."',laporanaksi.FileUrl) as FileUrl
                     , laporanaksi.Summary
                     , laporanaksi.Views
+                    , laporanaksi.TotalDownloaded
                 from laporanaksi";
       
       if($id != 0)
@@ -62,7 +63,39 @@ class LaporanAksi
       echo json_encode($response);    
    }
 
-   public function insert_update_laporan()
+   function download_laporan($id)
+   {
+        global $mysqli;
+        
+        $queryViews  = "select laporanaksi.TotalDownloaded from laporanaksi WHERE id=".$id." LIMIT 1";
+        $resultViews = mysqli_query($mysqli,$queryViews);
+        $row = mysqli_fetch_assoc($resultViews);
+           
+        $countViews = intval($row['TotalDownloaded'])+1;
+        $result = mysqli_query($mysqli, "UPDATE laporanaksi SET
+        TotalDownloaded = $countViews
+        WHERE id='$id'");
+
+        if($result)
+        {
+            $response=array(
+                    'status' => 1,
+                    'message' =>"Laporan Aksi was successfully updated"
+                );
+        }
+        else{
+            $response=array(
+                    'status' => 0,
+                    'message' =>"Laporan Aksi was unsuccessfully updated"
+            );
+        }
+        
+
+        header('Content-Type: application/json');
+        echo json_encode($response); 
+   }
+
+   function insert_update_laporan()
    {
         global $mysqli;
         $status = "0";
@@ -93,7 +126,8 @@ class LaporanAksi
                    Title = '$_POST[Title]',
                    FileName = '$_POST[FileName]',
                    FileUrl = '$urlFile',
-                   Summary = '$_POST[Summary]'");
+                   Summary = '$_POST[Summary]',
+                   CreatedAt = now()");
                     
                    if($result)
                    {
@@ -124,7 +158,8 @@ class LaporanAksi
                Category = '$_POST[Category]',
                Title = '$_POST[Title]',
                FileName = '$_POST[FileName]',
-               Summary = '$_POST[Summary]'
+               Summary = '$_POST[Summary]',
+               UpdatedAt = now()
                WHERE id='$id'");
 
                $status = "1";
