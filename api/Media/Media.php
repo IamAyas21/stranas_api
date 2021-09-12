@@ -14,6 +14,8 @@ switch ($request_method) {
     case 'GET':
          $id = 0;
          $page = "";
+         $filter = "";
+
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
@@ -22,8 +24,12 @@ switch ($request_method) {
          {
             $page=$_GET["page"];
          }
+          if(!empty($_GET["filter"]))
+         {
+            $filter=$_GET["filter"];
+         }
 
-         $media->get_media($id,$page);
+         $media->get_media($id,$page,$filter);
          break;
     case 'POST':
          $media->insert_media();

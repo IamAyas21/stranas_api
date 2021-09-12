@@ -14,7 +14,8 @@ class Gallery
                     , gallery.ImageName
                     , concat('".$host."',gallery.ImageUrl) as ImageUrl
                     , gallery.Descriptions
-                from gallery";
+                from gallery
+                order by gallery.Category asc";
       
       if($id != 0)
       {

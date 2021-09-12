@@ -4,7 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/config/Connection.php');
 
 class Media 
 {
-   public function get_media($id,$page)
+   public function get_media($id, $page, $filter)
    {
        global $mysqli;
       $host = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://'.$_SERVER['HTTP_HOST'].'/webservice/uploads/media/';
@@ -17,11 +17,12 @@ class Media
                     , concat('".$host."',media.VideoUrl) as VideoUrl
                     , media.Views
                     , ifnull(DATE_FORMAT(media.CreatedAt, '%d %M %Y'),'-') as CreatedAt
-                from media";
+                from media
+                where (Category = ".$filter." or ".$filter." = '0') ";
       
       if($id != 0)
       {
-         $query.=" WHERE id=".$id." LIMIT 1";
+         $query.=" AND id=".$id."";
       }
 
       if($page == "user")
@@ -35,7 +36,7 @@ class Media
             Views = $countViews
             WHERE id='$id'");
       }
-
+      
       $data=array();
       $result=$mysqli->query($query);
       while($row=mysqli_fetch_object($result))
@@ -60,7 +61,7 @@ class Media
       }
       
       header('Content-Type: application/json');
-      echo json_encode($response);   
+      echo json_encode($response);  
    }
 
    public function insert_update_laporan()
