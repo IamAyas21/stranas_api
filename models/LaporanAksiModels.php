@@ -67,10 +67,11 @@ class LaporanAksi
    {
         global $mysqli;
         
-        $queryViews  = "select laporanaksi.TotalDownloaded from laporanaksi WHERE id=".$id." LIMIT 1";
+        $queryViews  = "select laporanaksi.FileUrl, laporanaksi.TotalDownloaded from laporanaksi WHERE id=".$id." LIMIT 1";
         $resultViews = mysqli_query($mysqli,$queryViews);
         $row = mysqli_fetch_assoc($resultViews);
            
+        $fileUrl = $row['FileUrl'];
         $countViews = intval($row['TotalDownloaded'])+1;
         $result = mysqli_query($mysqli, "UPDATE laporanaksi SET
         TotalDownloaded = $countViews
@@ -80,7 +81,8 @@ class LaporanAksi
         {
             $response=array(
                     'status' => 1,
-                    'message' =>"Laporan Aksi was successfully updated"
+                    'message' =>"Laporan Aksi was successfully updated",
+                    'fileUrl' => $fileUrl
                 );
         }
         else{
@@ -121,6 +123,7 @@ class LaporanAksi
                if(move_uploaded_file($_FILES["FileUpload"]["tmp_name"] , $upload_name))
                {
                    $urlFile = $random_name;
+                   $date = date('Y-m-d H:i:s');
                    $result = mysqli_query($mysqli, "INSERT INTO laporanaksi SET
                    Category = '$_POST[Category]',
                    Title = '$_POST[Title]',

@@ -12,12 +12,18 @@ $media = new Media();
 $request_method=$_SERVER["REQUEST_METHOD"];
 switch ($request_method) {
     case 'GET':
+         $id = 0;
+         $page = "";
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
          }
-         
-         $media->get_media($id);
+         if(!empty($_GET["page"]))
+         {
+            $page=$_GET["page"];
+         }
+
+         $media->get_media($id,$page);
          break;
     case 'POST':
          $media->insert_media();

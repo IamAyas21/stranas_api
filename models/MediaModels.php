@@ -4,7 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/config/Connection.php');
 
 class Media 
 {
-   public function get_media($id)
+   public function get_media($id,$page)
    {
        global $mysqli;
       $host = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://'.$_SERVER['HTTP_HOST'].'/webservice/uploads/media/';
@@ -15,11 +15,25 @@ class Media
                     , media.Body
                     , media.VideoName
                     , concat('".$host."',media.VideoUrl) as VideoUrl
+                    , media.Views
+                    , ifnull(DATE_FORMAT(media.CreatedAt, '%d %M %Y'),'-') as CreatedAt
                 from media";
       
       if($id != 0)
       {
          $query.=" WHERE id=".$id." LIMIT 1";
+      }
+
+      if($page == "user")
+      {
+            $queryViews = "select media.Views from media WHERE id=".$id." LIMIT 1";
+            $resultViews = mysqli_query($mysqli,$queryViews);
+            $row = mysqli_fetch_assoc($resultViews);
+           
+            $countViews = intval($row['Views'])+1;
+            mysqli_query($mysqli, "UPDATE media SET
+            Views = $countViews
+            WHERE id='$id'");
       }
 
       $data=array();

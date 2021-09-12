@@ -14,10 +14,10 @@ switch ($request_method) {
     case 'GET':
         $id = 0;
         $page = "";
-         if(!empty($_GET["id"]))
-         {
+        if(!empty($_GET["id"]))
+        {
             $id=intval($_GET["id"]);
-         }
+        }
          
          if(!empty($_GET["page"]))
          {
@@ -29,6 +29,16 @@ switch ($request_method) {
     case 'POST':
          $gallery->insert_update_gallery();
          break;
+     case 'PUT':
+        $id = 0;
+        
+        if(!empty($_GET["id"]))
+        {
+            $id=intval($_GET["id"]);
+        }
+
+        $gallery->get_gallerys($id);
+        break;
     case 'DELETE':
             $id=intval($_GET["id"]);
             $gallery->delete_gallery($id);
