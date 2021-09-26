@@ -5,37 +5,40 @@ header('Access-Control-Allow-Credentials:true');
 header('Access-Control-Allow-Headers:Content-Type, Authorization');
 header('Content-Type: application/json');
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/models/CarrouselModels.php');
-//require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/models/CarrouselModels.php');
+//require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/models/VideoModels.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/models/VideoModels.php');
 
-$carrousel = new Carrousel();
+$video = new VideoCarrousel();
 $request_method=$_SERVER["REQUEST_METHOD"];
 switch ($request_method) {
-   case 'GET':
+    case 'GET':
+        $id = 0;
+        $page = "";
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
          }
          
-         $carrousel->get_carrousel($id);
+         $video->get_video($id, $page);
          break;
-   case 'POST':
-         $carrousel->insert_carrousel();
+    case 'POST':
+         $video->insert_update_video();
          break;
     case 'PUT':
+         $id = 0;
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
-            $carrousel->update_carrousel($id);
-         }   
-         break; 
-   case 'DELETE':
+         }
+
+         break;
+    case 'DELETE':
             $id=intval($_GET["id"]);
-            $carrousel->delete_carrousel($id);
+            $video->delete_video($id);
          break;
-   case 'OPTIONS':
+    case 'OPTIONS':
          break;
-   default:
+    default:
       // Invalid Request Method
          header("HTTP/1.0 405 Method Not Allowed");
          break;

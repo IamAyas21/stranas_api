@@ -5,37 +5,40 @@ header('Access-Control-Allow-Credentials:true');
 header('Access-Control-Allow-Headers:Content-Type, Authorization');
 header('Content-Type: application/json');
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/models/CarrouselModels.php');
-//require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/models/CarrouselModels.php');
+//require_once($_SERVER['DOCUMENT_ROOT'].'/Stranas/models/DocumentModels.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/webservice/models/DocumentModels.php');
 
-$carrousel = new Carrousel();
+$document = new DocumentCarrousel();
 $request_method=$_SERVER["REQUEST_METHOD"];
 switch ($request_method) {
-   case 'GET':
+    case 'GET':
+        $id = 0;
+        $page = "";
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
          }
          
-         $carrousel->get_carrousel($id);
+         $document->get_document($id, $page);
          break;
-   case 'POST':
-         $carrousel->insert_carrousel();
+    case 'POST':
+         $document->insert_update_document();
          break;
     case 'PUT':
+         $id = 0;
          if(!empty($_GET["id"]))
          {
             $id=intval($_GET["id"]);
-            $carrousel->update_carrousel($id);
-         }   
-         break; 
-   case 'DELETE':
+         }
+
+         break;
+    case 'DELETE':
             $id=intval($_GET["id"]);
-            $carrousel->delete_carrousel($id);
+            $document->delete_document($id);
          break;
-   case 'OPTIONS':
+    case 'OPTIONS':
          break;
-   default:
+    default:
       // Invalid Request Method
          header("HTTP/1.0 405 Method Not Allowed");
          break;
